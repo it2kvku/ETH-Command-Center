@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/eth-logo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ETH Command Center</title>
+  <meta name="description"
+    content="All-in-one Ethereum Dashboard - Monitor nodes, explore blocks, inspect accounts, track transactions, and analyze gas fees" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">◆</div>
+        <h1>ETH Command Center</h1>
+      </div>
+      <div class="header-status">
+        <span class="status-dot" id="connection-dot"></span>
+        <span id="connection-status">Connecting...</span>
+        <span class="latency" id="latency"></span>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="node-network">
+        <span class="tab-icon">🌐</span>
+        <span class="tab-label">Node & Network</span>
+      </button>
+      <button class="tab-btn" data-tab="chain-blocks">
+        <span class="tab-icon">📦</span>
+        <span class="tab-label">Chain & Blocks</span>
+      </button>
+      <button class="tab-btn" data-tab="accounts">
+        <span class="tab-icon">👛</span>
+        <span class="tab-label">Accounts</span>
+      </button>
+      <button class="tab-btn" data-tab="transactions">
+        <span class="tab-icon">💸</span>
+        <span class="tab-label">Transactions</span>
+      </button>
+      <button class="tab-btn" data-tab="logs-events">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">Logs & Events</span>
+      </button>
+      <button class="tab-btn" data-tab="gas-fees">
+        <span class="tab-icon">⛽</span>
+        <span class="tab-label">Gas & Fees</span>
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Tab A: Node & Network -->
+      <section class="tab-panel active" id="panel-node-network">
+        <div class="panel-header">
+          <h2>Node & Network Diagnostics</h2>
+          <p>Check endpoint status, network info, and node health</p>
+        </div>
+        <div class="cards-grid">
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">🔌</span>
+              <h3>Connection Status</h3>
+            </div>
+            <div class="card-body">
+              <div class="stat-row">
+                <span class="stat-label">Status</span>
+                <span class="stat-value" id="node-status">--</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Latency</span>
+                <span class="stat-value" id="node-latency">--</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Listening</span>
+                <span class="stat-value" id="node-listening">--</span>
+              </div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">⚙️</span>
+              <h3>Client Info</h3>
+            </div>
+            <div class="card-body">
+              <div class="stat-row">
+                <span class="stat-label">Client</span>
+                <span class="stat-value mono" id="client-version">--</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Network ID</span>
+                <span class="stat-value" id="network-id">--</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Chain ID</span>
+                <span class="stat-value" id="chain-id">--</span>
+              </div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">👥</span>
+              <h3>Peer Info</h3>
+            </div>
+            <div class="card-body">
+              <div class="stat-row">
+                <span class="stat-label">Peer Count</span>
+                <span class="stat-value" id="peer-count">--</span>
+              </div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">🔐</span>
+              <h3>SHA3 Demo</h3>
+            </div>
+            <div class="card-body">
+              <input type="text" id="sha3-input" class="input" placeholder="Enter text to hash..." />
+              <button class="btn btn-primary" id="sha3-btn">Hash with Keccak-256</button>
+              <div class="result-box mono" id="sha3-result">Result will appear here...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab B: Chain & Blocks -->
+      <section class="tab-panel" id="panel-chain-blocks">
+        <div class="panel-header">
+          <h2>Chain State & Block Explorer</h2>
+          <p>Browse blocks and view transaction counts</p>
+        </div>
+        <div class="cards-grid">
+          <div class="card glass span-2">
+            <div class="card-header">
+              <span class="card-icon">📊</span>
+              <h3>Latest Block</h3>
+              <button class="btn btn-small" id="refresh-block">↻ Refresh</button>
+            </div>
+            <div class="card-body">
+              <div class="block-stats">
+                <div class="block-stat">
+                  <span class="block-stat-value" id="latest-block-number">--</span>
+                  <span class="block-stat-label">Block Number</span>
+                </div>
+                <div class="block-stat">
+                  <span class="block-stat-value" id="latest-block-txs">--</span>
+                  <span class="block-stat-label">Transactions</span>
+                </div>
+                <div class="block-stat">
+                  <span class="block-stat-value" id="latest-block-gas">--</span>
+                  <span class="block-stat-label">Gas Used</span>
+                </div>
+                <div class="block-stat">
+                  <span class="block-stat-value" id="latest-block-time">--</span>
+                  <span class="block-stat-label">Timestamp</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card glass span-2">
+            <div class="card-header">
+              <span class="card-icon">🔍</span>
+              <h3>Block Search</h3>
+            </div>
+            <div class="card-body">
+              <div class="search-row">
+                <input type="text" id="block-search" class="input" placeholder="Enter block number or hash..." />
+                <button class="btn btn-primary" id="block-search-btn">Search</button>
+              </div>
+              <div class="block-details" id="block-details">
+                <p class="placeholder-text">Enter a block number or hash to view details</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab C: Accounts -->
+      <section class="tab-panel" id="panel-accounts">
+        <div class="panel-header">
+          <h2>Account Inspector</h2>
+          <p>View balance, nonce, code, and storage for any address</p>
+        </div>
+        <div class="cards-grid">
+          <div class="card glass span-2">
+            <div class="card-header">
+              <span class="card-icon">🔎</span>
+              <h3>Address Lookup</h3>
+            </div>
+            <div class="card-body">
+              <div class="search-row">
+                <input type="text" id="address-input" class="input" placeholder="Enter Ethereum address (0x...)" />
+                <button class="btn btn-primary" id="address-search-btn">Inspect</button>
+              </div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">💰</span>
+              <h3>Balance</h3>
+            </div>
+            <div class="card-body">
+              <div class="big-value" id="account-balance">--</div>
+              <div class="sub-value" id="account-balance-wei">--</div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">🔢</span>
+              <h3>Nonce</h3>
+            </div>
+            <div class="card-body">
+              <div class="big-value" id="account-nonce">--</div>
+              <div class="sub-value">Transaction count</div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">📄</span>
+              <h3>Account Type</h3>
+            </div>
+            <div class="card-body">
+              <div class="big-value" id="account-type">--</div>
+              <div class="sub-value" id="account-code-size">--</div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">💾</span>
+              <h3>Storage</h3>
+            </div>
+            <div class="card-body">
+              <input type="text" id="storage-slot" class="input" placeholder="Storage slot (0x0, 0x1...)" />
+              <button class="btn btn-secondary" id="storage-btn">Read Slot</button>
+              <div class="result-box mono" id="storage-result">--</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab D: Transactions -->
+      <section class="tab-panel" id="panel-transactions">
+        <div class="panel-header">
+          <h2>Transaction Lab</h2>
+          <p>Lookup transactions, view receipts, and simulate calls</p>
+        </div>
+        <div class="cards-grid">
+          <div class="card glass span-2">
+            <div class="card-header">
+              <span class="card-icon">🔍</span>
+              <h3>Transaction Lookup</h3>
+            </div>
+            <div class="card-body">
+              <div class="search-row">
+                <input type="text" id="tx-hash-input" class="input" placeholder="Enter transaction hash (0x...)" />
+                <button class="btn btn-primary" id="tx-search-btn">Search</button>
+              </div>
+              <div class="tx-details" id="tx-details">
+                <p class="placeholder-text">Enter a transaction hash to view details</p>
+              </div>
+            </div>
+          </div>
+          <div class="card glass span-2">
+            <div class="card-header">
+              <span class="card-icon">🧪</span>
+              <h3>Simulate Call (eth_call)</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>To Address</label>
+                  <input type="text" id="call-to" class="input" placeholder="0x..." />
+                </div>
+                <div class="form-group">
+                  <label>Data (hex)</label>
+                  <input type="text" id="call-data" class="input" placeholder="0x..." />
+                </div>
+                <div class="form-group">
+                  <label>From (optional)</label>
+                  <input type="text" id="call-from" class="input" placeholder="0x..." />
+                </div>
+                <div class="form-group">
+                  <label>Value (optional)</label>
+                  <input type="text" id="call-value" class="input" placeholder="0x0" />
+                </div>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-primary" id="simulate-btn">Simulate</button>
+                <button class="btn btn-secondary" id="estimate-gas-btn">Estimate Gas</button>
+              </div>
+              <div class="result-box mono" id="call-result">Result will appear here...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab E: Logs & Events -->
+      <section class="tab-panel" id="panel-logs-events">
+        <div class="panel-header">
+          <h2>Logs & Events Monitor</h2>
+          <p>Query contract events and create filters</p>
+        </div>
+        <div class="cards-grid">
+          <div class="card glass span-2">
+            <div class="card-header">
+              <span class="card-icon">📋</span>
+              <h3>Get Logs</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Contract Address</label>
+                  <input type="text" id="logs-address" class="input" placeholder="0x..." />
+                </div>
+                <div class="form-group">
+                  <label>Topic 0 (Event Signature)</label>
+                  <input type="text" id="logs-topic0" class="input" placeholder="0x... (e.g. Transfer event)" />
+                </div>
+                <div class="form-group">
+                  <label>From Block</label>
+                  <input type="text" id="logs-from" class="input" placeholder="latest, or block number"
+                    value="latest" />
+                </div>
+                <div class="form-group">
+                  <label>To Block</label>
+                  <input type="text" id="logs-to" class="input" placeholder="latest" value="latest" />
+                </div>
+              </div>
+              <button class="btn btn-primary" id="get-logs-btn">Get Logs</button>
+              <div class="logs-table" id="logs-table">
+                <p class="placeholder-text">Configure filters and click "Get Logs"</p>
+              </div>
+            </div>
+          </div>
+          <div class="card glass span-2">
+            <div class="card-header">
+              <span class="card-icon">🔔</span>
+              <h3>Live Filter (Polling Mode)</h3>
+            </div>
+            <div class="card-body">
+              <div class="filter-controls">
+                <select id="filter-type" class="input">
+                  <option value="logs">Log Filter</option>
+                  <option value="blocks">New Block Filter</option>
+                  <option value="pending">Pending Tx Filter</option>
+                </select>
+                <button class="btn btn-primary" id="create-filter-btn">Create Filter</button>
+                <button class="btn btn-secondary" id="poll-filter-btn" disabled>Poll Changes</button>
+                <button class="btn btn-danger" id="uninstall-filter-btn" disabled>Uninstall</button>
+              </div>
+              <div class="filter-status" id="filter-status">No active filter</div>
+              <div class="filter-results" id="filter-results"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab F: Gas & Fees -->
+      <section class="tab-panel" id="panel-gas-fees">
+        <div class="panel-header">
+          <h2>Gas & Fee Optimizer</h2>
+          <p>Current gas prices, EIP-1559 fee history, and recommendations</p>
+        </div>
+        <div class="cards-grid">
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">🐢</span>
+              <h3>Slow</h3>
+            </div>
+            <div class="card-body gas-card">
+              <div class="gas-value" id="gas-slow">--</div>
+              <div class="gas-unit">Gwei</div>
+            </div>
+          </div>
+          <div class="card glass featured">
+            <div class="card-header">
+              <span class="card-icon">⚡</span>
+              <h3>Normal</h3>
+            </div>
+            <div class="card-body gas-card">
+              <div class="gas-value" id="gas-normal">--</div>
+              <div class="gas-unit">Gwei</div>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <span class="card-icon">🚀</span>
+              <h3>Fast</h3>
+            </div>
+            <div class="card-body gas-card">
+              <div class="gas-value" id="gas-fast">--</div>
+              <div class="gas-unit">Gwei</div>
+            </div>
+          </div>
+          <div class="card glass span-3">
+            <div class="card-header">
+              <span class="card-icon">📈</span>
+              <h3>Base Fee History (Last 20 Blocks)</h3>
+              <button class="btn btn-small" id="refresh-gas">↻ Refresh</button>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="fee-chart"></canvas>
+              </div>
+              <div class="fee-stats">
+                <div class="fee-stat">
+                  <span class="fee-stat-label">Legacy Gas Price</span>
+                  <span class="fee-stat-value" id="legacy-gas-price">--</span>
+                </div>
+                <div class="fee-stat">
+                  <span class="fee-stat-label">Current Base Fee</span>
+                  <span class="fee-stat-value" id="current-base-fee">--</span>
+                </div>
+                <div class="fee-stat">
+                  <span class="fee-stat-label">Priority Fee (tip)</span>
+                  <span class="fee-stat-value" id="priority-fee">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- RPC Capability Scanner Modal -->
+    <div class="modal" id="capability-modal">
+      <div class="modal-content glass">
+        <h3>🔍 RPC Capability Scanner</h3>
+        <p>Checking supported methods...</p>
+        <div class="capability-list" id="capability-list"></div>
+        <button class="btn btn-primary" id="close-modal-btn">Close</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
