@@ -2,9 +2,15 @@
 
 All-in-one Ethereum Dashboard - Monitor nodes, explore blocks, inspect accounts, track transactions, and analyze gas fees.
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Visit_App-00C7B7?style=for-the-badge)](https://etherumcomand.netlify.app/)
 ![ETH Command Center](https://img.shields.io/badge/Ethereum-Dashboard-6366f1?style=for-the-badge&logo=ethereum)
 ![Vite](https://img.shields.io/badge/Vite-Build-646CFF?style=for-the-badge&logo=vite)
 ![JavaScript](https://img.shields.io/badge/Vanilla-JS-F7DF1E?style=for-the-badge&logo=javascript)
+
+## 🌐 Live Demo
+
+**👉 [https://etherumcomand.netlify.app/](https://etherumcomand.netlify.app/)**
+
 
 ## ✨ Features
 
